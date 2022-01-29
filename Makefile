@@ -2,6 +2,7 @@
 # Builds "fxload" binaries, distribution tarball, and RPMs.
 #
 
+OSNAME !=		uname
 prefix =		/
 exec_prefix =		${prefix}
 sbindir =		${exec_prefix}/sbin
@@ -24,20 +25,9 @@ FILES_OBJ =		$(FILES_SRC_C:%.c=%.o)
 REV =			$(shell date "+%Y_%m_%d"| awk '{print $$1}')
 RELEASE_NAME =		$(PROG)-$(REV)
 
-LIBS_LIBUSB =		-lusb
-LIBS_NONLINUX = 	-lusb
+LIBS =			-lusb
 
-LIBS =
-
-# For GNU/Linux and LIBUSB.
-ifdef LIBUSB_SUPPORT
-CFLAGS+=		-DLIBUSB_SUPPORT
-LIBS =			$(LIBS_LIBUSB)
-endif
-# For other systems.
-ifneq ($(shell uname), Linux)
-LIBS =			$(LIBS_NONLINUX)
-endif
+-include Mk/$(OSNAME).Mk
 
 # the interesting targets
 # NOTE:  the default build ("make all") labels itself as a
